@@ -27,13 +27,3 @@
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 16
 #define MATRIX_MUX_COLS 4
-
-/*
- * Keyboard Matrix Assignments
- * The nibble uses a demultiplexer for the cols.
- * to free up more IOs for awesomeness!
- * See matrix.c for more details.
-*/
-#define MATRIX_ROW_PINS { B1, B3, B2, B6, D4 }
-#define MATRIX_COL_MUX_PINS { F4, F5, F6, F7 }
-#define MATRIX_COL_PINS { }
