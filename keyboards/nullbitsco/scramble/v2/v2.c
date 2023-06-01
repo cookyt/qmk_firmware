@@ -52,11 +52,11 @@ void _set_led_pwm(uint8_t pwm, pwm_led_t* led, uint8_t channel) {
 void set_scramble_LED(uint8_t mode) {
     switch(mode) {
         case LED_ON:
-            set_scramble_LED_rgb_pwm(65, 100, 95);
+            set_scramble_LED_rgb_pwm(15, 100, 30);
         break;
 
         case LED_DIM:
-            set_scramble_LED_rgb_pwm(3, 9, 3);
+            set_scramble_LED_rgb_pwm(2, 19, 3);
         break;
 
         default: //LED_OFF
