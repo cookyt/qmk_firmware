@@ -1,0 +1,5 @@
+OLED_ENABLE = yes
+WPM_ENABLE = yes
+VIA_ENABLE = yes
+ENCODER_MAP_ENABLE = yes
+CONVERT_TO = bit_c_pro
