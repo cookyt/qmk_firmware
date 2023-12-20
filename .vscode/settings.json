@@ -4,7 +4,14 @@
     "editor.insertSpaces": true,
     // Configure glob patterns for excluding files and folders.
     "files.exclude": {
-        "**/.build": true,
+        //"**/.build": true,
+
+        // A very stupid way to hide everything in keyboards/* except
+        // keyboards/keychron/* and keyboards/nullbitsco/*
+        //
+        // See: https://github.com/microsoft/vscode/issues/869
+        "keyboards/{[!kn],[kn][!eu],[kn][eu][!ly],[kn][eu][yl][!cl],keyc[!h]}*": true,
+
         "**/*.hex": true,
         "**/*.bin": true,
         "**/*.uf2": true
