@@ -27,14 +27,61 @@ This will require a new communication protocol, as the current one is limited.
 */
 
 #include "remote_kb.h"
-#include "uart.h"
-#include "usb_util.h"
 
 uint8_t
  msg[UART_MSG_LEN],
  msg_idx = 0;
 
-// Private functions
+#if defined(__AVR_ATmega32U4__)
+#include "uart.h"
+
+#elif defined(MCU_RP)
+#include "quantum.h"
+#include "usb_util.h"
+#include <hal.h>
+
+// NOTE: RP2040 uart driver is not ready, so these must be implemented w/ SIO
+typedef SIODriver QMKSerialDriver;
+typedef SIOConfig QMKSerialConfig;
+
+/* USART in 8E2 config with RX and TX FIFOs enabled. */
+static QMKSerialConfig serial_config = {
+    .baud = (SERIAL_UART_BAUD),
+    .UARTLCR_H = UART_UARTLCR_H_WLEN_8BITS | UART_UARTLCR_H_PEN | UART_UARTLCR_H_STP2 | UART_UARTLCR_H_FEN,
+    .UARTCR = 0U,
+    .UARTIFLS = UART_UARTIFLS_RXIFLSEL_1_8F | UART_UARTIFLS_TXIFLSEL_1_8E,
+    .UARTDMACR = 0U
+};
+static QMKSerialDriver* serial_driver = (QMKSerialDriver*)&RMKB_SIO_DRIVER;
+
+void uart_init(uint32_t baud) {
+  // Set GPIO pins
+  palSetLineMode(RMKB_SIO_TX_PIN, PAL_MODE_ALTERNATE_UART);
+  palSetLineMode(RMKB_SIO_RX_PIN, PAL_MODE_ALTERNATE_UART);
+
+  // Init SIO driver
+  sioStart(serial_driver, &serial_config);
+}
+
+void uart_transmit(const uint8_t* data, uint16_t length) {
+  chnWriteTimeout(serial_driver, data, (size_t)length, TIME_MS2I(20));
+}
+
+bool uart_available(void) {
+  return !sioIsRXEmptyX(serial_driver);
+}
+
+uint8_t uart_read(void) {
+  return (uint8_t)sioGetX(serial_driver);
+}
+
+#else
+// Platform is not supported yet
+void matrix_init_remote_kb(void) {}
+void process_record_remote_kb(uint16_t keycode, keyrecord_t *record) {}
+void matrix_scan_remote_kb(void) {}
+
+#endif
 
 #if defined(KEYBOARD_HOST)
 static bool is_host(void) { return true; }
@@ -48,31 +95,29 @@ static bool is_host(void) {
   static bool is_host = false;
 
   if (!init) {
-#  if defined(__AVR_ATmega32U4__)
+    #if defined(__AVR_ATmega32U4__)
     // true if VBUS is present, false otherwise.
     USBCON |= (1 << OTGPADE); //enables VBUS pad
     _delay_us(10);
     is_host = (USBSTA & (1<<VBUS));  //checks state of VBUS
 
-#  elif defined(MCU_RP)
+    #else //MCU_RP
     for (uint16_t i = 0; i < (200); i++) {
-      // This will return true if a USB connection has been established
-      if (usb_connected_state()) {
-        is_host = true;
-        break;
-      }
-      wait_ms(10);
+        // This will return true if a USB connection has been established
+        if (usb_connected_state()) {
+            is_host = true;
+            break;
+        }
+        wait_ms(10);
     }
-#  else
-#    error("MCU not supported")
-#  endif  // defined(__AVR_ATMega32U4)
-    dprintf("host: %s\n",  is_host ? "true" : "false");
+    #endif
+  dprintf("host: %s\n",  is_host ? "true" : "false");
   }
-
+  init = true;
   return is_host;
 }
 
-#endif  // defined(KEYBOARD_HOST)
+#endif
 
 static uint8_t chksum8(const unsigned char *buf, size_t len) {
   unsigned int sum;
@@ -160,17 +205,16 @@ static void handle_remote_outgoing(uint16_t keycode, keyrecord_t *record) {
 }
 
 // Public functions
-
 void matrix_init_remote_kb(void) {
   uart_init(SERIAL_UART_BAUD);
 }
 
 void process_record_remote_kb(uint16_t keycode, keyrecord_t *record) {
-  if (is_host()) { handle_host_outgoing(); }
-  else { handle_remote_outgoing(keycode, record); }
+  if (is_host()) handle_host_outgoing();
+  else handle_remote_outgoing(keycode, record);
 }
 
 void matrix_scan_remote_kb(void) {
-  if (is_host()) { handle_host_incoming(); }
-  else { handle_remote_incoming(); }
+  if (is_host()) handle_host_incoming();
+  else handle_remote_incoming();
 }

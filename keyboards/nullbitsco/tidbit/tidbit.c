@@ -16,7 +16,7 @@
 
 #include "quantum.h"
 #include "common/remote_kb.h"
-#include "common/bitc_led.h"
+#include "common/nb_leds.h"
 
 bool numlock_set = false;
 
@@ -120,4 +120,12 @@ void matrix_init_kb(void) {
 void matrix_scan_kb(void) {
     matrix_scan_remote_kb();
     matrix_scan_user();
+}
+
+void keyboard_post_init_kb(void) {
+    #ifdef CONSOLE_ENABLE
+    debug_enable = true;
+    debug_matrix = true;
+    #endif
+    keyboard_post_init_user();
 }

@@ -7,11 +7,6 @@
         "pid": "0x6060",
         "device_version": "0.0.1"
     },
-    "encoder": {
-        "rotary": [
-            {"pin_a": "B5", "pin_b": "B4"}
-        ]
-    },
     "rgblight": {
         "led_count": 10,
         "sleep": true,
@@ -28,11 +23,6 @@
             "twinkle": true
         }
     },
-    "ws2812": {
-        "pin": "E6"
-    },
-    "processor": "atmega32u4",
-    "bootloader": "atmel-dfu",
     "debounce": 10,
     "layouts": {
         "LAYOUT_all": {

@@ -7,11 +7,6 @@
         "pid": "0x6063",
         "device_version": "0.0.1"
     },
-    "encoder": {
-        "rotary": [
-            {"pin_a": "B3", "pin_b": "B1"}
-        ]
-    },
     "rgblight": {
         "led_count": 10,
         "sleep": true,
@@ -30,26 +25,7 @@
             "twinkle": true
         }
     },
-    "split": {
-        "encoder": {
-            "right": {
-                "rotary": [
-                    {"pin_a": "B4", "pin_b": "B5"}
-                ]
-            }
-        },
-        "transport": {
-            "sync": {
-                "oled": true
-            }
-        }
-    },
-    "ws2812": {
-        "pin": "B2"
-    },
     "debounce": 10,
-    "processor": "atmega32u4",
-    "bootloader": "atmel-dfu",
     "layouts": {
         "LAYOUT_all": {
             "layout": [
