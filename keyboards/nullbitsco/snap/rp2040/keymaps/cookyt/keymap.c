@@ -17,6 +17,10 @@
 
 #include "bongo.h"
 
+// NOTE:
+// In order to get the slave oled to receive keypresses:
+// See: https://zenn.dev/teppeis/articles/2021-05-qmk-fire-process-record-in-slave
+
 // clang-format off
 enum layers {
     _BASE,
@@ -85,6 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 // clang-format on
+uint8_t current_wpm = 0;
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
@@ -158,16 +163,19 @@ static void render_status(void) {
 }
 
 bool oled_task_user(void) {
+    // Update wpm
+    current_wpm = get_current_wpm();
+
     if (is_keyboard_master()) {
         render_status();
     } else {
-        // bongo_render(0, 0);
+        bongo_render(0, 0);
     }
     return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    // bongo_process_record(record);
+    bongo_process_record(record);
     switch (keycode) {
         case CC_NEWLINE:
         case CC_TAB:
@@ -178,9 +186,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-// bool should_process_keypress(void) {
-//     return true;
-// }
+bool should_process_keypress(void) {
+    return true;
+}
 
 void keyboard_post_init_user(void) {
   // Customise these values to desired behaviour
