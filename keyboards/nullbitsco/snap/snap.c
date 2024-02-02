@@ -16,7 +16,6 @@
 
 #include "snap.h"
 
-#include "common/bitc_led.h"
 #include "common/remote_kb.h"
 
 // Macro variables
