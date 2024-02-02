@@ -24,8 +24,15 @@
 #include "gpio.h"
 #include "chibios_config.h"
 
-#ifndef SERIAL_DRIVER
-#    define SERIAL_DRIVER SD1
+#if defined(MCU_RP) && !defined(CHIBIOS_UART_USE_SIO)
+#    define CHIBIOS_UART_USE_SIO
+#endif
+
+#if !defined(CHIBIOS_UART_USE_SIO)
+#else
+#    ifndef SERIAL_DRIVER
+#        define SERIAL_DRIVER SD1
+#    endif
 #endif
 
 #ifndef SD1_TX_PIN

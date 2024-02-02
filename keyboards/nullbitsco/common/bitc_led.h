@@ -24,6 +24,8 @@
 #define GPIO_STATE_LOW  0
 #define GPIO_STATE_HIGH 1
 
-#define PIN_LED         F0
+#ifdef F0
+#    define PIN_LED         F0
+#endif
 
 void set_bitc_LED(uint8_t mode);

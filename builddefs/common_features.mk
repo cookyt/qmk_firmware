@@ -952,6 +952,7 @@ ifeq ($(strip $(SPI_DRIVER_REQUIRED)), yes)
 endif
 
 ifeq ($(strip $(UART_DRIVER_REQUIRED)), yes)
-    OPT_DEFS += -DHAL_USE_SERIAL=TRUE
+    # OPT_DEFS += -DHAL_USE_SERIAL=TRUE
+    OPT_DEFS += -DHAL_USE_SIO=TRUE
     QUANTUM_LIB_SRC += uart.c
 endif

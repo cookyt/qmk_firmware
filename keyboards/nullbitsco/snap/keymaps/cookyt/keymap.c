@@ -15,9 +15,7 @@
  */
 #include QMK_KEYBOARD_H
 
-#include <avr/platform_deps.h>
-
-#include "oled_graphics.h"
+#include "bongo.h"
 
 // clang-format off
 enum layers {
@@ -26,31 +24,65 @@ enum layers {
     _VIA2
 };
 
+#define LT1_SPC LT(_VIA1, KC_SPC)
+#define MO1 MO(_VIA1)
+#define _none_ KC_NO
+
+enum CookytKeycodes {
+    CC_NEWLINE = SAFE_RANGE,
+    CC_NL = CC_NEWLINE,
+
+    CC_TAB,
+
+    CC_WORD_RIGHT,
+    CC_WRDR = CC_WORD_RIGHT,
+
+    CC_WORD_LEFT,
+    CC_WRDL = CC_WORD_LEFT,
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_BASE] = LAYOUT_all(
-             KC_ESC,   KC_F1,   KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_F6,    KC_F7,  KC_F8,  KC_F9,   KC_F10,    KC_F11,    KC_F12,   KC_PSCR,  KC_PAUS,
-    KC_F13,  KC_GRV,   KC_1,    KC_2,   KC_3,   KC_4,   KC_5,   KC_6,     KC_7,   KC_8,   KC_9,    KC_0,      KC_MINS,   KC_EQL,   KC_BSPC,  KC_DEL,   KC_HOME,
-    KC_F14,  KC_TAB,   KC_Q,    KC_W,   KC_E,   KC_R,           KC_T,     KC_Y,   KC_U,   KC_I,    KC_O,      KC_P,      KC_LBRC,  KC_RBRC,  KC_BSLS,  KC_END,
-    KC_F15,  KC_CAPS,  KC_A,    KC_S,   KC_D,   KC_F,           KC_G,     KC_H,   KC_J,   KC_K,    KC_L,      KC_SCLN,   KC_QUOT,  KC_ENT,             KC_PGUP,
-    KC_F16,  KC_LSFT,  KC_NUHS, KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,     KC_N,   KC_M,   KC_COMM, KC_DOT,    KC_SLSH,   KC_RSFT,            KC_UP,    KC_PGDN,
-    KC_F17,  KC_LCTL,  KC_LGUI, KC_LALT,     MO(_VIA1),         KC_SPC,   KC_SPC,                  MO(_VIA1), KC_RALT,   KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT
-  ),
-    [_VIA1] = LAYOUT_all(
-            QK_BOOT,KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,  KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,          KC_NO,    KC_NO,                  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO
-  ),
-    [_VIA2] = LAYOUT_all(
-            KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,  KC_NO,
-    KC_NO,  KC_NO,  KC_NO,  KC_NO,          KC_NO,          KC_NO,    KC_NO,                  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO
-  )
+    [_BASE] = LAYOUT_ansi(
+              KC_ESC ,KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,KC_F6  /**/,KC_F7  ,KC_F8  ,KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_INS ,KC_DEL ,
+      /*                                                                                                                                    */
+      _none_ ,KC_GRV ,KC_1   ,KC_2   ,KC_3   ,KC_4   ,KC_5   ,KC_6   /**/,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,KC_EQL ,    KC_BSPC    ,KC_PAUS,
+      /*                                                                                                                                    */
+      KC_HOME,  KC_TAB  ,KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   /**/,KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_LBRC,KC_RBRC,   KC_BSLS  ,_none_ ,
+      /*                                                                                                                                    */
+      KC_PGUP,   KC_LCTL   ,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   /**/,KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,KC_QUOT,      KC_ENT     ,KC_PGUP,
+      /*                                                                                                                                    */
+      KC_PGDN,     KC_LSFT     ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   /**/,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,   KC_RSFT   ,KC_UP  ,KC_PGDN,
+      /*                                                                                                                                    */
+      KC_END , KC_LCTL , KC_LGUI , KC_LALT ,MO1    ,     KC_SPC        /**/,      LT1_SPC        ,KC_RALT,KC_RGUI,KC_RCTL,KC_LEFT,KC_DOWN,KC_RGHT
+    ),
+
+    [_VIA1] = LAYOUT_ansi(
+              _______,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,
+      /*                                                                                                                                    */
+      QK_BOOT,_none_ ,_none_ ,_none_ ,_none_ ,KC_END ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,KC_HOME,_none_ ,_none_ ,    _______    ,QK_BOOT,
+      /*                                                                                                                                    */
+      _none_ ,  CC_TAB  ,_none_ ,CC_WRDR,KC_WH_D,_none_ ,_none_ /**/,KC_WH_U,KC_PGUP,KC_HOME,CC_NL  ,_none_ ,KC_ESC ,_none_ ,   _none_   ,_none_ ,
+      /*                                                                                                                                    */
+      _none_ ,   _______   ,KC_END ,_none_ ,KC_PGDN,_none_ ,_none_ /**/,KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,_none_ ,_none_ ,      _______    ,_none_ ,
+      /*                                                                                                                                    */
+      _none_ ,     _______     ,_none_ ,_none_ ,_none_ ,_none_ ,CC_WRDL/**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,   _______   ,_none_ ,_none_ ,
+      /*                                                                                                                                    */
+      _none_ , _______ , _______ , _______ ,_none_ ,     _______       /**/,      _none_         ,_______,_______,_______,_none_ ,_none_ ,_none_
+    ),
+
+    [_VIA2] = LAYOUT_ansi(
+              QK_BOOT,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,
+      /*                                                                                                                                    */
+      _none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,    _none_     ,_none_ ,
+      /*                                                                                                                                    */
+      _none_ ,  _none_  ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,   _none_   ,_none_ ,
+      /*                                                                                                                                    */
+      _none_ ,   _none_    ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,      _none_     ,_none_ ,
+      /*                                                                                                                                    */
+      _none_ ,     _none_      ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,   _none_    ,_none_ ,_none_ ,
+      /*                                                                                                                                    */
+      _none_ , _none_  , _none_  , _none_  ,_none_ ,     _none_        /**/,      _none_         ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_
+    ),
 };
 // clang-format on
 
@@ -62,42 +94,11 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 };
 #endif
 
-
-// Decompress and write a precompressed bitmap frame to the OLED.
-// Documentation and python compression script available at:
-// https://github.com/nullbitsco/squeez-o
-#ifdef USE_OLED_BITMAP_COMPRESSION
-static void oled_write_compressed_P(const char* input_block_map, const char* input_block_list) {
-    uint16_t block_index = 0;
-    for (uint16_t i = 0; i < NUM_OLED_BYTES; i++) {
-        uint8_t bit          = i % 8;
-        uint8_t map_index    = i / 8;
-        uint8_t _block_map   = (uint8_t)pgm_read_byte_near(input_block_map + map_index);
-        uint8_t nonzero_byte = (_block_map & (1 << bit));
-        if (nonzero_byte) {
-            const char data = (const char)pgm_read_byte_near(input_block_list + block_index++);
-            oled_write_raw_byte(data, i);
-        } else {
-            const char data = (const char)0x00;
-            oled_write_raw_byte(data, i);
-        }
-    }
-}
-#endif
-
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_left())
         return OLED_ROTATION_0;
     else
         return OLED_ROTATION_180;
-}
-
-static void render_nullbits_logo(void) {
-#ifdef USE_OLED_BITMAP_COMPRESSION
-    oled_write_compressed_P(nullbits_logo_block_map, nullbits_logo_bmp);
-#else
-    oled_write_raw_P(nullbits_logo, sizeof(nullbits_logo));
-#endif
 }
 
 static void render_status(void) {
@@ -160,7 +161,31 @@ bool oled_task_user(void) {
     if (is_keyboard_master()) {
         render_status();
     } else {
-        render_nullbits_logo();
+        // bongo_render(0, 0);
     }
     return true;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // bongo_process_record(record);
+    switch (keycode) {
+        case CC_NEWLINE:
+        case CC_TAB:
+        case CC_WORD_LEFT:
+        case CC_WORD_RIGHT:
+            break;
+    }
+    return true;
+}
+
+// bool should_process_keypress(void) {
+//     return true;
+// }
+
+void keyboard_post_init_user(void) {
+  // Customise these values to desired behaviour
+  debug_enable=true;
+  //debug_matrix=true;
+  //debug_keyboard=true;
+  //debug_mouse=true;
 }

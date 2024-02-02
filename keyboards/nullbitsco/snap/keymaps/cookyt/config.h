@@ -18,7 +18,6 @@
 
 /* space savers */
 #define DYNAMIC_KEYMAP_LAYER_COUNT 3
-#define NO_ACTION_TAPPING
 #define NO_ACTION_ONESHOT
 #define TAPPING_FORCE_HOLD
 

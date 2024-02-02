@@ -13,7 +13,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "snap.h"
+
+#include "common/bitc_led.h"
+#include "common/remote_kb.h"
 
 // Macro variables
 bool is_alt_tab_active = false;
@@ -22,7 +26,7 @@ bool muted = false;
 
 void matrix_init_kb(void) {
     set_bitc_LED(LED_OFF);
-    matrix_init_remote_kb();
+    //matrix_init_remote_kb();
     matrix_init_user();
 }
 
@@ -35,7 +39,7 @@ void keyboard_post_init_kb(void) {
 }
 
 void matrix_scan_kb(void) {
-    matrix_scan_remote_kb();
+    //matrix_scan_remote_kb();
     matrix_scan_user();
 
     if (is_alt_tab_active) {
@@ -54,7 +58,7 @@ void led_update_ports(led_t led_state) {
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     // If console is enabled, it will print the matrix position and status of each key pressed
     #ifdef CONSOLE_ENABLE
-    dprintf("kc: 0x%04X, col: %u, row: %u, pressed: %b, time: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time);
+    dprintf("kc: 0x%04X, col: %u, row: %u, pressed: %d, time: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time);
     #endif
 
     process_record_remote_kb(keycode, record);
