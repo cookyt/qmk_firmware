@@ -16,48 +16,32 @@
 #include QMK_KEYBOARD_H
 
 #include "bongo.h"
+#include "constants.h"
 
 // NOTE:
 // In order to get the slave oled to receive keypresses:
 // See: https://zenn.dev/teppeis/articles/2021-05-qmk-fire-process-record-in-slave
 
-// clang-format off
-enum layers {
-    _BASE,
-    _VIA1,
-    _VIA2
-};
-
 #define LT1_SPC LT(_VIA1, KC_SPC)
-#define MO1 MO(_VIA1)
+#define LT1_ENT LT(_VIA1, KC_ENT)
+#define MO1 MO(_VIA2)
+#define CT_QUOT LCTL_T(KC_QUOT)
 #define _none_ KC_NO
 
-enum CookytKeycodes {
-    CC_NEWLINE = SAFE_RANGE,
-    CC_NL = CC_NEWLINE,
-
-    CC_TAB,
-
-    CC_WORD_RIGHT,
-    CC_WRDR = CC_WORD_RIGHT,
-
-    CC_WORD_LEFT,
-    CC_WRDL = CC_WORD_LEFT,
-};
-
+// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_ansi(
               KC_ESC ,KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,KC_F6  /**/,KC_F7  ,KC_F8  ,KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_INS ,KC_DEL ,
       /*                                                                                                                                    */
-      _none_ ,KC_GRV ,KC_1   ,KC_2   ,KC_3   ,KC_4   ,KC_5   ,KC_6   /**/,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,KC_EQL ,    KC_BSPC    ,KC_PAUS,
+      KC_MPLY,KC_GRV ,KC_1   ,KC_2   ,KC_3   ,KC_4   ,KC_5   ,KC_6   /**/,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,KC_EQL ,    KC_BSPC    ,KC_PAUS,
       /*                                                                                                                                    */
-      KC_HOME,  KC_TAB  ,KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   /**/,KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_LBRC,KC_RBRC,   KC_BSLS  ,_none_ ,
+      KC_HOME,  KC_TAB  ,KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   /**/,KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_LBRC,KC_RBRC,   KC_BSLS  ,KC_CAPS,
       /*                                                                                                                                    */
-      KC_PGUP,   KC_LCTL   ,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   /**/,KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,KC_QUOT,      KC_ENT     ,KC_PGUP,
+      KC_PGUP,   KC_LCTL   ,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   /**/,KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,CT_QUOT,      KC_ENT     ,KC_PGUP,
       /*                                                                                                                                    */
-      KC_PGDN,     KC_LSFT     ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   /**/,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,   KC_RSFT   ,KC_UP  ,KC_PGDN,
+      KC_PGDN,     SC_LSPO     ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   /**/,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,   SC_RSPC   ,KC_UP  ,KC_PGDN,
       /*                                                                                                                                    */
-      KC_END , KC_LCTL , KC_LGUI , KC_LALT ,MO1    ,     KC_SPC        /**/,      LT1_SPC        ,KC_RALT,KC_RGUI,KC_RCTL,KC_LEFT,KC_DOWN,KC_RGHT
+      KC_END , KC_LCTL ,MO1    , KC_LALT , KC_LGUI ,     LT1_SPC       /**/,      LT1_ENT        ,KC_RALT,KC_RGUI,KC_RCTL,KC_LEFT,KC_DOWN,KC_RGHT
     ),
 
     [_VIA1] = LAYOUT_ansi(
@@ -69,9 +53,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       /*                                                                                                                                    */
       _none_ ,   _______   ,KC_END ,_none_ ,KC_PGDN,_none_ ,_none_ /**/,KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,_none_ ,_none_ ,      _______    ,_none_ ,
       /*                                                                                                                                    */
-      _none_ ,     _______     ,_none_ ,_none_ ,_none_ ,_none_ ,CC_WRDL/**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,   _______   ,_none_ ,_none_ ,
+      _none_ ,     _______     ,_none_ ,KC_DEL ,_none_ ,_none_ ,CC_WRDL/**/,_none_ ,_none_ ,CC_TABL,CC_TABR,_none_ ,   _______   ,_none_ ,_none_ ,
       /*                                                                                                                                    */
-      _none_ , _______ , _______ , _______ ,_none_ ,     _______       /**/,      _none_         ,_______,_______,_______,_none_ ,_none_ ,_none_
+      _none_ , _______ , _______ , _______ ,_______,     _______       /**/,      _______        ,_______,_______,_______,_none_ ,_none_ ,_none_
     ),
 
     [_VIA2] = LAYOUT_ansi(
@@ -88,9 +72,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _none_ , _none_  , _none_  , _none_  ,_none_ ,     _none_        /**/,      _none_         ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_
     ),
 };
-// clang-format on
-uint8_t current_wpm = 0;
-
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [_BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_MPRV, KC_MNXT) },
@@ -98,6 +79,9 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [_VIA2] = { ENCODER_CCW_CW(KC_NO, KC_NO),     ENCODER_CCW_CW(KC_NO, KC_NO) }
 };
 #endif
+// clang-format on
+
+uint8_t current_wpm = 0;
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_left())
@@ -124,7 +108,7 @@ static void render_status(void) {
     // Host Keyboard LED Status
     oled_set_cursor(0, 1);
     static led_t persistent_led_state = {0};
-    led_t led_state = host_keyboard_led_state();
+    led_t        led_state            = host_keyboard_led_state();
 
     // Only update if the LED state has changed
     // Otherwise, the OLED will not turn off if an LED is on.
@@ -152,7 +136,6 @@ static void render_status(void) {
     // WPM and max WPM
     oled_set_cursor(0, 2);
     oled_write_P(PSTR("WPM "), false);
-    uint8_t current_wpm = get_current_wpm();
     oled_write(get_u8_str(current_wpm, '0'), true);
 
     oled_set_cursor(8, 2);
@@ -176,13 +159,30 @@ bool oled_task_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     bongo_process_record(record);
-    switch (keycode) {
-        case CC_NEWLINE:
-        case CC_TAB:
-        case CC_WORD_LEFT:
-        case CC_WORD_RIGHT:
-            break;
+
+    if (record->event.pressed) {
+        switch ((enum CookytKeycodes)keycode) {
+            case CC_NEWLINE:
+                SEND_STRING(SS_TAP(X_END) SS_LSFT("\n"));
+                break;
+            case CC_TAB:
+                SEND_STRING("  ");
+                break;
+            case CC_WORD_LEFT:
+                SEND_STRING(SS_LCTL(SS_TAP(X_LEFT)));
+                break;
+            case CC_WORD_RIGHT:
+                SEND_STRING(SS_LCTL(SS_TAP(X_RIGHT)));
+                break;
+            case CC_CHROME_TAB_LEFT:
+                SEND_STRING(SS_LCTL(SS_TAP(X_PAGE_UP)));
+                break;
+            case CC_CHROME_TAB_RIGHT:
+                SEND_STRING(SS_LCTL(SS_TAP(X_PAGE_DOWN)));
+                break;
+        }
     }
+
     return true;
 }
 
@@ -190,10 +190,24 @@ bool should_process_keypress(void) {
     return true;
 }
 
+#include "rgblight_layers.inc"
+
 void keyboard_post_init_user(void) {
-  // Customise these values to desired behaviour
-  debug_enable=true;
-  //debug_matrix=true;
-  //debug_keyboard=true;
-  //debug_mouse=true;
+    keyboard_post_init_RGBLIGHT_LAYERS();
+
+    // Customise these values to desired behaviour
+    // debug_enable = true;
+    // debug_matrix=true;
+    // debug_keyboard=true;
+    // debug_mouse=true;
+}
+
+bool led_update_user(led_t led_state) {
+    return led_update_RGBLIGHT_LAYERS(led_state);
+}
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+    return default_layer_state_set_RGBLIGHT_LAYERS(state);
+}
+layer_state_t layer_state_set_user(layer_state_t state) {
+    return layer_state_set_RGBLIGHT_LAYERS(state);
 }

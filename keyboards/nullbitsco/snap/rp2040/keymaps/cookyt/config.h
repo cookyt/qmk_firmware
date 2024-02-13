@@ -21,3 +21,7 @@
 
 // Split Options
 #define SPLIT_TRANSPORT_MIRROR
+
+#define RGBLIGHT_LAYERS
+
+#define SPLIT_LAYER_STATE_ENABLE
