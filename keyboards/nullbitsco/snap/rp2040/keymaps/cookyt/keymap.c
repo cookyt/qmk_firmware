@@ -64,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       /*                                                                                                                                    */
       _none_ ,     KC_LSFT     ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,KC_0   ,KC_COMM,KC_DOT ,_none_ ,   KC_RSFT   ,_none_ ,_none_ ,
       /*                                                                                                                                    */
-      _none_ , _none_  , _none_  , _none_  ,_none_ ,     KC_SPC        /**/,      KC_ENT         ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_
+      _none_ , _none_  , _______ , _none_  ,_none_ ,     KC_SPC        /**/,      KC_ENT         ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_
     ),
 };
 #if defined(ENCODER_MAP_ENABLE)
