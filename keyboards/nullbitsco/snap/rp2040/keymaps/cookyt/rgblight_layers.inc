@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 
+#include "caps_word.h"
 #include "constants.h"
 
 /*
@@ -21,14 +22,14 @@ const rgblight_segment_t PROGMEM rgblight_capslock_layer[] = RGBLIGHT_LAYER_SEGM
     {2, 2, HSV_RED}
 );
 
-#define MY_RGB_TEAL        0x1E, 0xE1, 0xBB
-#define MY_RGB_ROYAL_BLUE  0x1E, 0x44, 0xE1
+#define MY_RGB_TEAL  0x0b, 0xff, 0x6d
+#define MY_RGB_BLUE  0xdd, 0xf7, 0xff
 
-#define MY_HSV_TEAL        168, (255*.867), (255*.882)
-#define MY_HSV_ROYAL_BLUE  228, (255*.867), (255*.882)
+#define MY_HSV_TEAL  255*144/360, (255*.700), (255*.800)
+#define MY_HSV_BLUE  255*194/360, (255*.133), (255*.750)
 
 const rgblight_segment_t PROGMEM rgblight_base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    LEFT_RIGHT_COLORS(MY_HSV_TEAL, MY_HSV_ROYAL_BLUE)
+    LEFT_RIGHT_COLORS(MY_HSV_TEAL, MY_HSV_BLUE)
 );
 
 const rgblight_segment_t PROGMEM rgblight_nav_layer[] = RGBLIGHT_LAYER_SEGMENTS(
@@ -55,7 +56,7 @@ void keyboard_post_init_RGBLIGHT_LAYERS(void) {
 }
 
 bool led_update_RGBLIGHT_LAYERS(led_t led_state) {
-    rgblight_set_layer_state(3, led_state.caps_lock);
+    rgblight_set_layer_state(3, led_state.caps_lock || is_caps_word_on());
     return true;
 }
 

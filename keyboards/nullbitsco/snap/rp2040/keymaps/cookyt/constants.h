@@ -22,3 +22,11 @@ enum CookytKeycodes {
     CC_CHROME_TAB_RIGHT,
     CC_TABR = CC_CHROME_TAB_RIGHT,
 };
+
+#define LT1_SPC LT(_VIA1, KC_SPC)
+#define LT1_ENT LT(_VIA1, KC_ENT)
+#define MO1 MO(_VIA2)
+#define CT_QUOT LCTL_T(KC_QUOT)
+#define _none_ KC_NO
+
+#define QK_CLR QK_CLEAR_EEPROM

@@ -16,17 +16,12 @@
 #include QMK_KEYBOARD_H
 
 #include "bongo.h"
+#include "caps_word.h"
 #include "constants.h"
 
 // NOTE:
 // In order to get the slave oled to receive keypresses:
 // See: https://zenn.dev/teppeis/articles/2021-05-qmk-fire-process-record-in-slave
-
-#define LT1_SPC LT(_VIA1, KC_SPC)
-#define LT1_ENT LT(_VIA1, KC_ENT)
-#define MO1 MO(_VIA2)
-#define CT_QUOT LCTL_T(KC_QUOT)
-#define _none_ KC_NO
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -35,11 +30,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       /*                                                                                                                                    */
       KC_MPLY,KC_GRV ,KC_1   ,KC_2   ,KC_3   ,KC_4   ,KC_5   ,KC_6   /**/,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,KC_EQL ,    KC_BSPC    ,KC_PAUS,
       /*                                                                                                                                    */
-      KC_HOME,  KC_TAB  ,KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   /**/,KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_LBRC,KC_RBRC,   KC_BSLS  ,KC_CAPS,
+      KC_HOME,  KC_TAB  ,KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   /**/,KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_LBRC,KC_RBRC,   KC_BSLS  ,CW_TOGG,
       /*                                                                                                                                    */
       KC_PGUP,   KC_LCTL   ,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   /**/,KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,CT_QUOT,      KC_ENT     ,KC_PGUP,
       /*                                                                                                                                    */
-      KC_PGDN,     SC_LSPO     ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   /**/,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,   SC_RSPC   ,KC_UP  ,KC_PGDN,
+      KC_PGDN,     KC_LSFT     ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   /**/,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,   KC_RSFT   ,KC_UP  ,KC_PGDN,
       /*                                                                                                                                    */
       KC_END , KC_LCTL ,MO1    , KC_LALT , KC_LGUI ,     LT1_SPC       /**/,      LT1_ENT        ,KC_RALT,KC_RGUI,KC_RCTL,KC_LEFT,KC_DOWN,KC_RGHT
     ),
@@ -59,22 +54,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_VIA2] = LAYOUT_ansi(
-              QK_BOOT,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,
+              QK_CLR ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,
       /*                                                                                                                                    */
-      _none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,    _none_     ,_none_ ,
+      _none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,KC_7   ,KC_8   ,KC_9   ,_none_ ,_none_ ,_none_ ,    _none_     ,_none_ ,
       /*                                                                                                                                    */
-      _none_ ,  _none_  ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,   _none_   ,_none_ ,
+      _none_ ,  _none_  ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,/**/_none_ ,KC_4   ,KC_5   ,KC_6   ,_none_ ,_none_ ,_none_ ,   _none_   ,_none_ ,
       /*                                                                                                                                    */
-      _none_ ,   _none_    ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,      _none_     ,_none_ ,
+      _none_ ,   _none_    ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,KC_1   ,KC_2   ,KC_3   ,_none_ ,_none_ ,      _none_     ,_none_ ,
       /*                                                                                                                                    */
-      _none_ ,     _none_      ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,   _none_    ,_none_ ,_none_ ,
+      _none_ ,     KC_LSFT     ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ /**/,_none_ ,KC_0   ,KC_COMM,KC_DOT ,_none_ ,   KC_RSFT   ,_none_ ,_none_ ,
       /*                                                                                                                                    */
-      _none_ , _none_  , _none_  , _none_  ,_none_ ,     _none_        /**/,      _none_         ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_
+      _none_ , _none_  , _none_  , _none_  ,_none_ ,     KC_SPC        /**/,      KC_ENT         ,_none_ ,_none_ ,_none_ ,_none_ ,_none_ ,_none_
     ),
 };
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [_BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_MPRV, KC_MNXT) },
+    [_BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [_VIA1] = { ENCODER_CCW_CW(KC_NO, KC_NO),     ENCODER_CCW_CW(KC_NO, KC_NO) },
     [_VIA2] = { ENCODER_CCW_CW(KC_NO, KC_NO),     ENCODER_CCW_CW(KC_NO, KC_NO) }
 };
@@ -117,7 +112,7 @@ static void render_status(void) {
 
         oled_write_ln_P(PSTR(""), false);
 
-        if (led_state.caps_lock) {
+        if (led_state.caps_lock || is_caps_word_on()) {
             oled_set_cursor(0, 1);
             oled_write_P(PSTR("CAPS"), false);
         }
@@ -211,3 +206,5 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 layer_state_t layer_state_set_user(layer_state_t state) {
     return layer_state_set_RGBLIGHT_LAYERS(state);
 }
+
+#include "combos.inc"
