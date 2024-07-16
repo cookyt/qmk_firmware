@@ -32,6 +32,3 @@
 #define MATRIX_ROWS 12
 #define MATRIX_COLS 9
 #define MATRIX_MUX_COLS 3
-
-/* Optional split transactions */
-#define SPLIT_OLED_ENABLE

@@ -16,8 +16,26 @@
 
 #pragma once
 
+#include <stdint.h>
+#include "gpio.h"
+#include "quantum.h"
+
 #define OLED_BRIGHTNESS 128
 #define OLED_TIMEOUT 30000
 
-// Split Options
-#define SPLIT_TRANSPORT_MIRROR
+/* Optional big LED pins */
+#define BIG_LED_R_PIN D7
+#define BIG_LED_G_PIN C6
+#define BIG_LED_B_PIN D0
+
+#define LED_ON          2
+#define LED_OFF         0
+
+#define GPIO_STATE_LOW  0
+#define GPIO_STATE_HIGH 1
+
+void
+  set_big_LED_rgb(uint8_t r_mode, uint8_t g_mode, uint8_t b_mode),
+  set_big_LED_r(uint8_t mode),
+  set_big_LED_g(uint8_t mode),
+  set_big_LED_b(uint8_t mode);
