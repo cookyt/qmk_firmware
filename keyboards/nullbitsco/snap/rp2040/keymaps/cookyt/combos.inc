@@ -1,7 +1,7 @@
 // Combo configuration per: https://docs.qmk.fm/#/feature_combo
 
-#include "process_combo.h"
 #include "constants.h"
+#include "process_combo.h"
 #include "progmem.h"
 
 // clang-format off
@@ -31,6 +31,10 @@ const uint16_t PROGMEM kSym_0[] = {LT1_ENT,   KC_U,     KC_I,     KC_O,     KC_P
 
 // clang-format on
 
+const uint16_t PROGMEM kDoubleShift[] = {KC_LEFT_SHIFT, KC_RIGHT_SHIFT,
+                                         COMBO_END};
+
+// clang-format off
 combo_t key_combos[] = {
     COMBO(kNum_0, KC_0),
     COMBO(kNum_1, KC_1),
@@ -43,6 +47,8 @@ combo_t key_combos[] = {
     COMBO(kNum_8, KC_8),
     COMBO(kNum_9, KC_9),
 
+    COMBO(kDoubleShift, KC_CAPS_LOCK),
+
     // COMBO(kSym_0, LCTL(KC_0)),
     // COMBO(kSym_1, LCTL(KC_1)),
     // COMBO(kSym_2, LCTL(KC_2)),
@@ -54,3 +60,4 @@ combo_t key_combos[] = {
     // COMBO(kSym_8, LCTL(KC_8)),
     // COMBO(kSym_9, LCTL(KC_9)),
 };
+// clang-format on
