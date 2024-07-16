@@ -3,12 +3,12 @@ CompileFlags:
     -Wno-unknown-attributes,
     -Wno-maybe-uninitialized,
     -Wno-unknown-warning-option
-    -isystem, /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1,
-    -isystem, /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi,
-    -isystem, /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/backward,
-    -isystem, /usr/lib/gcc/arm-none-eabi/10.3.1/include,
-    -isystem, /usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed,
-    -isystem, /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include,
+    -isystem, /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/include/c++/13.2.1,
+    -isystem, /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/include/c++/13.2.1/arm-none-eabi,
+    -isystem, /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/include/c++/13.2.1/backward,
+    -isystem, /usr/lib/gcc/arm-none-eabi/13.2.1/include,
+    -isystem, /usr/lib/gcc/arm-none-eabi/13.2.1/include-fixed,
+    -isystem, /usr/lib/gcc/arm-none-eabi/13.2.1/../../../arm-none-eabi/include,
   ]
-  Remove: [-W*, -mcall-prologues, -mcpu=*, -mno-unaligned-access, -mfloat-abi=*, -mfpu=*]
+  Remove: [-W*, -mmcu=*, -mcpu=*, -mfpu=*, -mfloat-abi=*, -mno-unaligned-access, -mno-thumb-interwork, -mcall-prologues]
   Compiler: clang
