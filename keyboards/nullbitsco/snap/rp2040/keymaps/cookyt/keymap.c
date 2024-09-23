@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       /*                                                                                                                                    */
       _none_ ,   _______   ,KC_END ,_none_ ,KC_PGDN,_none_ ,_none_ /**/,KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,_none_ ,_none_ ,      _______    ,_none_ ,
       /*                                                                                                                                    */
-      _none_ ,     _______     ,_none_ ,KC_DEL ,_none_ ,_none_ ,CC_WRDL/**/,_none_ ,_none_ ,CC_TABL,CC_TABR,_none_ ,   _______   ,_none_ ,_none_ ,
+      _none_ ,     _______     ,_none_ ,CC_TABL,CC_TABR,_none_ ,CC_WRDL/**/,_none_ ,_none_ ,CC_TABL,CC_TABR,_none_ ,   _______   ,_none_ ,_none_ ,
       /*                                                                                                                                    */
       _none_ , _______ , _______ , _______ ,_______,     _______       /**/,      _______        ,_______,_______,_______,_none_ ,_none_ ,_none_
     ),
@@ -158,22 +158,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         switch ((enum CookytKeycodes)keycode) {
             case CC_NEWLINE:
-                SEND_STRING(SS_TAP(X_END) SS_LSFT("\n"));
+                SEND_STRING_DELAY(SS_TAP(X_END) SS_LSFT("\n"), 10);
                 break;
             case CC_TAB:
-                SEND_STRING("  ");
+                SEND_STRING_DELAY("  ", 10);
                 break;
             case CC_WORD_LEFT:
-                SEND_STRING(SS_LCTL(SS_TAP(X_LEFT)));
+                SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_LEFT)), 10);
                 break;
             case CC_WORD_RIGHT:
-                SEND_STRING(SS_LCTL(SS_TAP(X_RIGHT)));
+                SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_RIGHT)), 10);
                 break;
             case CC_CHROME_TAB_LEFT:
-                SEND_STRING(SS_LCTL(SS_TAP(X_PAGE_UP)));
+                SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_PAGE_UP)), 10);
                 break;
             case CC_CHROME_TAB_RIGHT:
-                SEND_STRING(SS_LCTL(SS_TAP(X_PAGE_DOWN)));
+                SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_PAGE_DOWN)), 10);
                 break;
         }
     }
