@@ -13,4 +13,5 @@ SPACE_CADET_ENABLE = no
 
 # CONVERT_TO = bit_c_pro
 
-SRC += simple_oled_status.c
+SRC += simple_oled_status.c \
+       typehud.c

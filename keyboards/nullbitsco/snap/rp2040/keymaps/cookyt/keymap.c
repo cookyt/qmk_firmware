@@ -13,11 +13,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "action.h"
+#include "oled_driver.h"
 #include QMK_KEYBOARD_H
 
 #include "bongo.h"
 #include "constants.h"
+#include "keyboard.h"
 #include "simple_oled_status.h"
+#include "typehud.h"
 
 // NOTE:
 // In order to get the slave oled to receive keypresses:
@@ -78,26 +82,33 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 // clang-format on
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (is_keyboard_left())
+  oled_clear();
+
+  if (!is_keyboard_master()) {
+    typehud_init();
+  }
+
+  if (is_keyboard_left()) {
     return OLED_ROTATION_0;
-  else
+  } else {
     return OLED_ROTATION_180;
+  }
 }
 
 bool oled_task_user(void) {
-  // Update wpm
   simple_oled_status_task();
-
   if (is_keyboard_master()) {
     simple_oled_status_render();
   } else {
-    bongo_render(0, 0);
+    typehud_render();
+    // bongo_render(0, 0);
   }
   return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  bongo_process_record(record);
+  typehud_process_record(record);
+  // bongo_process_record(record);
 
   if (record->event.pressed) {
     switch ((enum CookytKeycodes)keycode) {
