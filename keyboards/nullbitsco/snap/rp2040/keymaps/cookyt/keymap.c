@@ -16,12 +16,13 @@
 #include QMK_KEYBOARD_H
 
 #include "bongo.h"
-#include "caps_word.h"
 #include "constants.h"
+#include "simple_oled_status.h"
 
 // NOTE:
 // In order to get the slave oled to receive keypresses:
-// See: https://zenn.dev/teppeis/articles/2021-05-qmk-fire-process-record-in-slave
+// See:
+// https://zenn.dev/teppeis/articles/2021-05-qmk-fire-process-record-in-slave
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -76,135 +77,76 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 #endif
 // clang-format on
 
-uint8_t current_wpm = 0;
-
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (is_keyboard_left())
-        return OLED_ROTATION_0;
-    else
-        return OLED_ROTATION_180;
-}
-
-static void render_status(void) {
-    oled_set_cursor(0, 0);
-    oled_write_P(PSTR("SNAP75 "), false);
-    oled_write_P(PSTR("Layer "), false);
-    switch (get_highest_layer(layer_state)) {
-        case _VIA1:
-            oled_write_P(PSTR("FN1 "), false);
-            break;
-        case _VIA2:
-            oled_write_P(PSTR("FN2 "), false);
-            break;
-        default: // use BASE case as default
-            oled_write_P(PSTR("Base"), false);
-    }
-
-    // Host Keyboard LED Status
-    oled_set_cursor(0, 1);
-    static led_t persistent_led_state = {0};
-    led_t        led_state            = host_keyboard_led_state();
-
-    // Only update if the LED state has changed
-    // Otherwise, the OLED will not turn off if an LED is on.
-    if (persistent_led_state.raw != led_state.raw) {
-        persistent_led_state = led_state;
-
-        oled_write_ln_P(PSTR(""), false);
-
-        if (led_state.caps_lock || is_caps_word_on()) {
-            oled_set_cursor(0, 1);
-            oled_write_P(PSTR("CAPS"), false);
-        }
-
-        if (led_state.num_lock) {
-            oled_set_cursor(5, 1);
-            oled_write_P(PSTR("NUM"), true);
-        }
-
-        if (led_state.scroll_lock) {
-            oled_set_cursor(9, 1);
-            oled_write_P(PSTR("SCR"), false);
-        }
-    }
-
-    // WPM and max WPM
-    oled_set_cursor(0, 2);
-    oled_write_P(PSTR("WPM "), false);
-    oled_write(get_u8_str(current_wpm, '0'), true);
-
-    oled_set_cursor(8, 2);
-    oled_write_P(PSTR("MAX "), false);
-    static uint8_t max_wpm;
-    max_wpm = MAX(max_wpm, current_wpm);
-    oled_write(get_u8_str(max_wpm, '0'), true);
+  if (is_keyboard_left())
+    return OLED_ROTATION_0;
+  else
+    return OLED_ROTATION_180;
 }
 
 bool oled_task_user(void) {
-    // Update wpm
-    current_wpm = get_current_wpm();
+  // Update wpm
+  simple_oled_status_task();
 
-    if (is_keyboard_master()) {
-        render_status();
-    } else {
-        bongo_render(0, 0);
-    }
-    return true;
+  if (is_keyboard_master()) {
+    simple_oled_status_render();
+  } else {
+    bongo_render(0, 0);
+  }
+  return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    bongo_process_record(record);
+  bongo_process_record(record);
 
-    if (record->event.pressed) {
-        switch ((enum CookytKeycodes)keycode) {
-            case CC_NEWLINE:
-                SEND_STRING_DELAY(SS_TAP(X_END) SS_LSFT("\n"), 10);
-                break;
-            case CC_TAB:
-                SEND_STRING_DELAY("  ", 10);
-                break;
-            case CC_WORD_LEFT:
-                SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_LEFT)), 10);
-                break;
-            case CC_WORD_RIGHT:
-                SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_RIGHT)), 10);
-                break;
-            case CC_CHROME_TAB_LEFT:
-                SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_PAGE_UP)), 10);
-                break;
-            case CC_CHROME_TAB_RIGHT:
-                SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_PAGE_DOWN)), 10);
-                break;
-        }
+  if (record->event.pressed) {
+    switch ((enum CookytKeycodes)keycode) {
+    case CC_NEWLINE:
+      SEND_STRING_DELAY(SS_TAP(X_END) SS_LSFT("\n"), 10);
+      break;
+    case CC_TAB:
+      SEND_STRING_DELAY("  ", 10);
+      break;
+    case CC_WORD_LEFT:
+      SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_LEFT)), 10);
+      break;
+    case CC_WORD_RIGHT:
+      SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_RIGHT)), 10);
+      break;
+    case CC_CHROME_TAB_LEFT:
+      SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_PAGE_UP)), 10);
+      break;
+    case CC_CHROME_TAB_RIGHT:
+      SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_PAGE_DOWN)), 10);
+      break;
     }
+  }
 
-    return true;
+  return true;
 }
 
-bool should_process_keypress(void) {
-    return true;
-}
+bool should_process_keypress(void) { return true; }
 
 #include "rgblight_layers.inc"
 
 void keyboard_post_init_user(void) {
-    keyboard_post_init_RGBLIGHT_LAYERS();
+  keyboard_post_init_RGBLIGHT_LAYERS();
 
-    // Customise these values to desired behaviour
-    // debug_enable = true;
-    // debug_matrix=true;
-    // debug_keyboard=true;
-    // debug_mouse=true;
+  // Customise these values to desired behaviour
+  // debug_enable = true;
+  // debug_matrix=true;
+  // debug_keyboard=true;
+  // debug_mouse=true;
 }
 
 bool led_update_user(led_t led_state) {
-    return led_update_RGBLIGHT_LAYERS(led_state);
+  return led_update_RGBLIGHT_LAYERS(led_state);
 }
 layer_state_t default_layer_state_set_user(layer_state_t state) {
-    return default_layer_state_set_RGBLIGHT_LAYERS(state);
+  return default_layer_state_set_RGBLIGHT_LAYERS(state);
 }
 layer_state_t layer_state_set_user(layer_state_t state) {
-    return layer_state_set_RGBLIGHT_LAYERS(state);
+  return layer_state_set_RGBLIGHT_LAYERS(state);
 }
 
 #include "combos.inc"

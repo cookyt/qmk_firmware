@@ -12,3 +12,5 @@ COMMAND_ENABLE = no
 SPACE_CADET_ENABLE = no
 
 # CONVERT_TO = bit_c_pro
+
+SRC += simple_oled_status.c
