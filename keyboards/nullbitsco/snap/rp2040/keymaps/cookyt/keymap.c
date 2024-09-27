@@ -106,31 +106,43 @@ bool oled_task_user(void) {
   return true;
 }
 
+#define CC_LCTL_KEYCODE(keydown, keycode)                                      \
+  if (keydown)                                                                 \
+    SEND_STRING_DELAY(SS_DOWN(X_LCTL) SS_DOWN(keycode), 10);                   \
+  else                                                                         \
+    SEND_STRING_DELAY(SS_UP(keycode) SS_UP(X_LCTL), 10);
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   typehud_process_record(record);
   // bongo_process_record(record);
 
-  if (record->event.pressed) {
-    switch ((enum CookytKeycodes)keycode) {
-    case CC_NEWLINE:
+  bool keydown = record->event.pressed;
+  switch ((enum CookytKeycodes)keycode) {
+  case CC_NEWLINE:
+    if (keydown)
       SEND_STRING_DELAY(SS_TAP(X_END) SS_LSFT("\n"), 10);
-      break;
-    case CC_TAB:
+    break;
+
+  case CC_TAB:
+    if (keydown)
       SEND_STRING_DELAY("  ", 10);
-      break;
-    case CC_WORD_LEFT:
-      SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_LEFT)), 10);
-      break;
-    case CC_WORD_RIGHT:
-      SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_RIGHT)), 10);
-      break;
-    case CC_CHROME_TAB_LEFT:
-      SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_PAGE_UP)), 10);
-      break;
-    case CC_CHROME_TAB_RIGHT:
-      SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_PAGE_DOWN)), 10);
-      break;
-    }
+    break;
+
+  case CC_WORD_LEFT:
+    CC_LCTL_KEYCODE(keydown, X_LEFT);
+    break;
+
+  case CC_WORD_RIGHT:
+    CC_LCTL_KEYCODE(keydown, X_RIGHT);
+    break;
+
+  case CC_CHROME_TAB_LEFT:
+    CC_LCTL_KEYCODE(keydown, X_PAGE_UP);
+    break;
+
+  case CC_CHROME_TAB_RIGHT:
+    CC_LCTL_KEYCODE(keydown, X_PAGE_DOWN);
+    break;
   }
 
   return true;
