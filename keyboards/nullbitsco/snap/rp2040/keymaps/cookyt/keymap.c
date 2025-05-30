@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "action.h"
+#include "keycodes.h"
 #include "oled_driver.h"
 #include QMK_KEYBOARD_H
 
@@ -37,9 +38,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       /*                                                                                                                                    */
       KC_HOME,  KC_TAB  ,KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   /**/,KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_LBRC,KC_RBRC,   KC_BSLS  ,KC_CAPS,
       /*                                                                                                                                    */
-      KC_PGUP,   KC_LCTL   ,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   /**/,KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,CT_QUOT,      KC_ENT     ,KC_PGUP,
+      KC_PGUP,   KC_LCTL   ,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   /**/,KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,CT_QUOT,      KC_ENT     ,KC_PSCR,
       /*                                                                                                                                    */
-      KC_PGDN,     KC_LSFT     ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   /**/,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,   KC_RSFT   ,KC_UP  ,KC_PGDN,
+      KC_PGDN,     KC_LSFT     ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   /**/,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,   KC_RSFT   ,KC_UP  ,KC_PAUS,
       /*                                                                                                                                    */
       KC_END , KC_LCTL ,MO1    , KC_LALT , KC_LGUI ,     LT1_SPC       /**/,      LT1_ENT        ,KC_RALT,KC_RGUI,KC_RCTL,KC_LEFT,KC_DOWN,KC_RGHT
     ),
@@ -49,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       /*                                                                                                                                    */
       QK_BOOT,_none_ ,_none_ ,_none_ ,_none_ ,KC_END ,_none_ ,_none_ /**/,_none_ ,_none_ ,_none_ ,KC_HOME,_none_ ,_none_ ,    _______    ,QK_BOOT,
       /*                                                                                                                                    */
-      _none_ ,  CC_TAB  ,_none_ ,CC_WRDR,KC_WH_D,_none_ ,_none_ /**/,KC_WH_U,KC_PGUP,KC_HOME,CC_NL  ,_none_ ,KC_ESC ,_none_ ,   _none_   ,_none_ ,
+      _none_ ,  CC_TAB  ,KC_DEL ,CC_WRDR,KC_WH_D,_none_ ,_none_ /**/,KC_WH_U,KC_PGUP,KC_HOME,CC_NL  ,_none_ ,KC_ESC ,_none_ ,   _none_   ,_none_ ,
       /*                                                                                                                                    */
       _none_ ,   _______   ,KC_END ,_none_ ,KC_PGDN,_none_ ,_none_ /**/,KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,_none_ ,_none_ ,      _______    ,_none_ ,
       /*                                                                                                                                    */
